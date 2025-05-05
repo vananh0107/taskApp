@@ -1,12 +1,16 @@
   spring:
     application:
       name: todo
-
     datasource:
-      url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT:3306}/${DATABASE_NAME:todo_app}?ssl-mode=REQUIRED
-      username: ${DATABASE_USER:root}
-      password: ${DATABASE_PASSWORD:123456}
+      url: jdbc:mysql://mysql-38bf4999-buivananh01072003-eca0.l.aivencloud.com:26121/defaultdb?ssl-mode=REQUIRED
+      username: avnadmin
+      password: AVNS_GURnGLWwlgNxuCRP3I5
       driver-class-name: com.mysql.cj.jdbc.Driver
+#    datasource:
+#      url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT:3306}/${DATABASE_NAME:todo_app}?ssl-mode=REQUIRED
+#      username: ${DATABASE_USER:root}
+#      password: ${DATABASE_PASSWORD:123456}
+#      driver-class-name: com.mysql.cj.jdbc.Driver
 
     jpa:
       hibernate:
@@ -22,7 +26,7 @@
       locations: resources/migration
 
   server:
-    port: 8080
+    port: 8081
 
   jwt:
     signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
