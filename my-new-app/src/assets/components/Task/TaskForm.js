@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-const TaskForm = ({ task, onClose, onSave }) => {
+const TaskForm = ({ task, categories, users, onClose, onSave }) => {
   const [title, setTitle] = useState(task?.title || '');
   const [description, setDescription] = useState(task?.description || '');
   const [categoryId, setCategoryId] = useState(task?.category?.id || '');
   const [priority, setPriority] = useState(task?.priority || 'Low');
-  const [dueDate, setDueDate] = useState(task?.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : ''); 
+  const [dueDate, setDueDate] = useState(
+    task?.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : ''
+  );
+  const [userId, setUserId] = useState(task?.user?.id || '');
   const [error, setError] = useState('');
 
-  const categories = useSelector(state => state.categories);
-
+  console.log(users);
   useEffect(() => {
     if (task) {
       setTitle(task.title || '');
       setDescription(task.description || '');
       setCategoryId(task.category?.id || '');
       setPriority(task.priority || 'Low');
-      setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : '');
+      setDueDate(
+        task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : ''
+      );
+      setUserId(task.user?.id || '');
     }
   }, [task]);
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,9 +38,10 @@ const TaskForm = ({ task, onClose, onSave }) => {
     const taskData = {
       title,
       description,
-      categoryId: categoryId || null, 
+      categoryId: categoryId || null,
       priority,
       dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+      userId: userId || null,
     };
 
     onSave(taskData);
@@ -45,11 +50,16 @@ const TaskForm = ({ task, onClose, onSave }) => {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
       <div className="relative p-8 border w-full max-w-md md:max-w-lg shadow-lg rounded-md bg-white">
-        <h3 className="text-2xl font-bold mb-4">{task ? 'Edit Task' : 'Add New Task'}</h3>
+        <h3 className="text-2xl font-bold mb-4">
+          {task ? 'Edit Task' : 'Add New Task'}
+        </h3>
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="title"
+            >
               Title
             </label>
             <input
@@ -62,7 +72,10 @@ const TaskForm = ({ task, onClose, onSave }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="description"
+            >
               Description
             </label>
             <textarea
@@ -73,7 +86,10 @@ const TaskForm = ({ task, onClose, onSave }) => {
             ></textarea>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="category"
+            >
               Category
             </label>
             <select
@@ -83,13 +99,41 @@ const TaskForm = ({ task, onClose, onSave }) => {
               onChange={(e) => setCategoryId(e.target.value)}
             >
               <option value="">Select Category</option>
-              {categories.map(cat => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
-              ))}
+              {Array.isArray(categories) &&
+                categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
             </select>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="priority">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="user"
+            >
+              Assign To
+            </label>
+            <select
+              id="user"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+            >
+              <option value="">Select User</option>
+              {Array.isArray(users) &&
+                users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.firstname} {user.lastname}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="priority"
+            >
               Priority
             </label>
             <select
@@ -104,7 +148,10 @@ const TaskForm = ({ task, onClose, onSave }) => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="dueDate">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="dueDate"
+            >
               Due Date
             </label>
             <input

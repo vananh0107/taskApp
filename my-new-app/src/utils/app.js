@@ -1,13 +1,12 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8081/',
+  baseURL: 'https://taskapp-yo30.onrender.com/',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Thêm Request Interceptor
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token'); 

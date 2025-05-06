@@ -1,4 +1,4 @@
-import api from '../utils/app';  // nhớ đúng đường dẫn nhé!
+import api from '../utils/app';
 
 export const FETCH_CATEGORIES_SUCCESS = 'FETCH_CATEGORIES_SUCCESS';
 export const ADD_CATEGORY_SUCCESS = 'ADD_CATEGORY_SUCCESS';

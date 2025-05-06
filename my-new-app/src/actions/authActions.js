@@ -1,4 +1,4 @@
-import api from '../utils/app'; 
+import api from '../utils/app';
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -13,6 +13,10 @@ export const REGISTER_FAILURE = 'REGISTER_FAILURE';
 export const GET_USER_INFO_REQUEST = 'GET_USER_INFO_REQUEST';
 export const GET_USER_INFO_SUCCESS = 'GET_USER_INFO_SUCCESS';
 export const GET_USER_INFO_FAILURE = 'GET_USER_INFO_FAILURE';
+
+export const GET_ALL_USERS_REQUEST = 'GET_ALL_USERS_REQUEST';
+export const GET_ALL_USERS_SUCCESS = 'GET_ALL_USERS_SUCCESS';
+export const GET_ALL_USERS_FAILURE = 'GET_ALL_USERS_FAILURE';
 
 export const login = (username, password) => async (dispatch) => {
   try {
@@ -45,7 +49,6 @@ export const userLogout = () => async (dispatch) => {
 
     localStorage.removeItem('token');
     dispatch({ type: LOGOUT });
-    
   } catch (error) {
     console.error('Logout Error:', error);
     localStorage.removeItem('token');
@@ -76,9 +79,8 @@ export const register = (userData, navigate) => async (dispatch) => {
 export const getUserInfo = () => async (dispatch) => {
   try {
     dispatch({ type: GET_USER_INFO_REQUEST });
-
-    const response = await api.get('/users/my-info');
-
+    const token = localStorage.getItem('token');
+    const response = await api.get('/users/my-info', { token });
     dispatch({
       type: GET_USER_INFO_SUCCESS,
       payload: response.data.result,
@@ -91,3 +93,18 @@ export const getUserInfo = () => async (dispatch) => {
   }
 };
 
+export const getAllUsers = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_ALL_USERS_REQUEST });
+    const response = await api.get('/users');
+    dispatch({
+      type: GET_ALL_USERS_SUCCESS,
+      payload: response.data.result,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_ALL_USERS_FAILURE,
+      payload: error.response?.data?.message || error.message,
+    });
+  }
+};

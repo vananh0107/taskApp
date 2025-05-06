@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../actions/authActions';
+import { getUserInfo, login } from '../actions/authActions';
 
 const Login = () => {
   const [username, setUsername] = useState('');

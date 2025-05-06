@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-const TaskForm = ({ task, onClose, onSave }) => {
+const TaskForm = ({ task, onClose, onSave, categories, users }) => {
   const [title, setTitle] = useState(task?.title || '');
   const [description, setDescription] = useState(task?.description || '');
   const [categoryId, setCategoryId] = useState(task?.category?.id || '');
   const [priority, setPriority] = useState(task?.priority || 'Low');
-  const [dueDate, setDueDate] = useState(task?.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : ''); 
+  const [dueDate, setDueDate] = useState(task?.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : '');
+  const [userId, setUserId] = useState(task?.user?.id || '');
   const [error, setError] = useState('');
-
-  const categories = useSelector(state => state.categories);
+  console.log(users)
 
   useEffect(() => {
     if (task) {
@@ -18,9 +18,9 @@ const TaskForm = ({ task, onClose, onSave }) => {
       setCategoryId(task.category?.id || '');
       setPriority(task.priority || 'Low');
       setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().slice(0, 16) : '');
+      setUserId(task.user?.id || '');
     }
   }, [task]);
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,11 +34,12 @@ const TaskForm = ({ task, onClose, onSave }) => {
     const taskData = {
       title,
       description,
-      categoryId: categoryId || null, 
+      categoryId: categoryId || null,
       priority,
       dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+      userId: userId || null,
     };
-
+    console.log(taskData)
     onSave(taskData);
   };
 
@@ -83,8 +84,26 @@ const TaskForm = ({ task, onClose, onSave }) => {
               onChange={(e) => setCategoryId(e.target.value)}
             >
               <option value="">Select Category</option>
-              {categories.map(cat => (
+              {Array.isArray(categories) && categories.map(cat => (
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="user">
+              Assign To
+            </label>
+            <select
+              id="user"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+            >
+              <option value="">Select User</option>
+              {Array.isArray(users) && users.map(user => (
+                <option key={user.id} value={user.id}>
+                  {user.firstName} {user.lastName}
+                </option>
               ))}
             </select>
           </div>
